@@ -12,7 +12,10 @@
   }
   function hideSafety() {
     const modal = document.getElementById('safetyModal');
-    modal.hidden = true;
+    if (modal) {
+      modal.hidden = true;
+      modal.style.display = 'none';
+    }
     document.body.classList.remove('modal-open');
   }
   function goToStep(n) {
@@ -116,35 +119,31 @@
     const result = document.getElementById('fanResult');
     result.hidden = false;
     const passed = fanState.score >= 2;
-    const icon = document.getElementById('fanResultIcon');
-    const title = document.getElementById('fanResultTitle');
-    const text = document.getElementById('fanResultText');
+
+    document.getElementById('fanResultIcon').textContent = passed ? '🏆' : '😬';
+    document.getElementById('fanResultTitle').textContent = passed
+      ? `מצוין! ${fanState.score}/3`
+      : `אופס... ${fanState.score}/3`;
+    document.getElementById('fanResultText').textContent = passed
+      ? 'עברת את המבחן. אתה אוהד אמיתי. ברוך הבא ל-FANCHAT!'
+      : 'צריך לפחות 2 נכון כדי להיכנס. נסה שוב!';
+
     const retryBtn = document.getElementById('fanRetryBtn');
     const finishBtn = document.getElementById('fanFinishBtn');
-    if (passed) {
-      icon.textContent = '🏆';
-      title.textContent = `מצוין! ${fanState.score}/3`;
-      text.textContent = 'עברת את המבחן. אתה אוהד אמיתי. ברוך הבא ל-FANCHAT!';
-      retryBtn.hidden = true;
-      finishBtn.hidden = false;
-    } else {
-      icon.textContent = '😬';
-      title.textContent = `אופס... ${fanState.score}/3`;
-      text.textContent = 'צריך לפחות 2 נכון כדי להיכנס. נסה שוב!';
-      retryBtn.hidden = false;
-      finishBtn.hidden = true;
-    }
-    if (!retryBtn._wired) {
-      retryBtn._wired = true;
-      retryBtn.addEventListener('click', () => { initFanTest(); });
-    }
-    if (!finishBtn._wired) {
-      finishBtn._wired = true;
-      finishBtn.addEventListener('click', () => {
+    retryBtn.hidden = passed;
+    finishBtn.hidden = !passed;
+    retryBtn.style.display = passed ? 'none' : '';
+    finishBtn.style.display = passed ? '' : 'none';
+
+    retryBtn.onclick = function () { initFanTest(); };
+    finishBtn.onclick = function () {
+      try {
         localStorage.setItem(ONBOARDING_KEY, JSON.stringify({ at: Date.now(), score: fanState.score }));
-        hideSafety();
-      });
-    }
+      } catch (e) {
+        try { sessionStorage.setItem(ONBOARDING_KEY, '1'); } catch (e2) {}
+      }
+      hideSafety();
+    };
   }
 
   /* ---------------- MAIN LANDING ---------------- */
