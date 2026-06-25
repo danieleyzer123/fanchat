@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FANCHAT ⚽ - בצ'אט</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="chat-body">
+  <div class="chat-shell">
+    <header class="chat-header">
+      <div class="my-team" id="myTeam">
+        <span class="my-team-logo" id="myTeamLogo"></span>
+        <span class="my-team-name" id="myTeamName">---</span>
+      </div>
+      <div class="online-indicator">
+        <span class="dot"></span>
+        <span id="onlineCount">--</span> אונליין
+      </div>
+      <button class="icon-btn" id="leaveBtn" title="חזור">✖</button>
+    </header>
+
+    <div class="video-area">
+      <div class="remote-wrap">
+        <video id="remoteVideo" autoplay playsinline></video>
+
+        <div class="searching-overlay" id="searchingOverlay">
+          <div class="search-spinner"></div>
+          <h2>מחפש לך אוהד אחר...</h2>
+          <p id="searchingText">בודק את התור של הקבוצה שלך</p>
+        </div>
+
+        <div class="stranger-info" id="strangerInfo" hidden>
+          <div class="stranger-team">
+            <span class="stranger-logo" id="strangerLogo"></span>
+            <span id="strangerTeam">---</span>
+          </div>
+          <div class="stranger-meta">
+            <span id="strangerAge">--</span>
+            <span class="dot-sep">·</span>
+            <span id="strangerLang">--</span>
+          </div>
+        </div>
+
+        <div class="local-wrap">
+          <video id="localVideo" autoplay playsinline muted></video>
+        </div>
+      </div>
+
+      <div class="chat-side" id="chatSide">
+        <div class="chat-messages" id="chatMessages">
+          <div class="system-msg">💬 שולחים הודעות בזמן השיחה</div>
+        </div>
+        <form class="chat-input" id="chatForm">
+          <input type="text" id="chatText" placeholder="כתוב הודעה..." maxlength="500" autocomplete="off" />
+          <button type="submit">➤</button>
+        </form>
+      </div>
+    </div>
+
+    <footer class="chat-controls">
+      <button class="ctrl-btn ghost" id="muteBtn" title="השתק">🎙️</button>
+      <button class="ctrl-btn ghost" id="camBtn" title="כבה מצלמה">📷</button>
+      <button class="ctrl-btn primary" id="skipBtn" title="הבא">
+        <span>⏭ הבא</span>
+      </button>
+      <button class="ctrl-btn heart" id="heartBtn" title="לב">❤️</button>
+      <button class="ctrl-btn ghost" id="reportBtn" title="דווח">⛔</button>
+    </footer>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/teams.js"></script>
+  <script src="/js/chat.js"></script>
+</body>
+</html>

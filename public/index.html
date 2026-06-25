@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FANCHAT ⚽ - וידאו צ'אט לאוהדי כדורגל</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="landing-body">
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+  </div>
+  <div class="confetti-layer">
+    <span class="confetti" style="--delay:0s; --left:5%;">⚽</span>
+    <span class="confetti" style="--delay:2s; --left:15%;">🎉</span>
+    <span class="confetti" style="--delay:4s; --left:25%;">🏆</span>
+    <span class="confetti" style="--delay:1s; --left:38%;">⚽</span>
+    <span class="confetti" style="--delay:6s; --left:50%;">🎊</span>
+    <span class="confetti" style="--delay:3s; --left:62%;">🥇</span>
+    <span class="confetti" style="--delay:5s; --left:75%;">⚽</span>
+    <span class="confetti" style="--delay:7s; --left:88%;">🎉</span>
+    <span class="confetti" style="--delay:8s; --left:95%;">🏆</span>
+  </div>
+
+  <!-- ===========  SAFETY ONBOARDING MODAL  =========== -->
+  <div class="safety-modal" id="safetyModal" hidden>
+    <div class="safety-backdrop"></div>
+    <div class="safety-content">
+      <div class="safety-progress">
+        <span class="dot active" data-dot="1"></span>
+        <span class="dot" data-dot="2"></span>
+        <span class="dot" data-dot="3"></span>
+      </div>
+
+      <!-- Step 1: Age Gate -->
+      <div class="safety-step" data-safety-step="1">
+        <div class="safety-emoji">🔞</div>
+        <h2>ברוכים הבאים ל-FANCHAT</h2>
+        <p class="safety-lead">לפני שאתה נכנס - 3 שלבי אימות מהירים. זה לוקח 30 שניות וזה מה שמגן על הקהילה.</p>
+        <div class="safety-card">
+          <strong>אזהרה:</strong> השירות הזה הוא ל-18+ בלבד. שיחות וידאו חיות עם זרים. אסור כניסה לקטינים.
+        </div>
+        <label class="safety-check">
+          <input type="checkbox" id="ageConfirm" />
+          <span>אני מאשר/ת שאני בן/בת <strong>18 ומעלה</strong>, ושכל מי שיצולם במצלמה שלי הוא 18+</span>
+        </label>
+        <div class="safety-actions">
+          <button class="safety-next" data-go="2" disabled>המשך →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Rules -->
+      <div class="safety-step" data-safety-step="2" hidden>
+        <div class="safety-emoji">📜</div>
+        <h2>חוקי הקהילה</h2>
+        <p class="safety-lead">פלטפורמה בריאה דורשת כללים. הפרה = חסימה מיידית, ללא אזהרה.</p>
+        <ul class="safety-rules">
+          <li><span class="x">❌</span> <strong>אסור</strong> עירום, תוכן מיני, או חשיפת איברים פרטיים</li>
+          <li><span class="x">❌</span> <strong>אסור</strong> הטרדה, גזענות, איומים, או דברי שנאה</li>
+          <li><span class="x">❌</span> <strong>אסור</strong> פרסום מסחרי, ספאם, או הפניה לאתרים חיצוניים</li>
+          <li><span class="x">❌</span> <strong>אסור</strong> חשיפת קטינים במצלמה, אפילו בטעות</li>
+          <li><span class="v">✅</span> כבד אוהדים של קבוצות יריבות - אנחנו כאן בשביל הכיף</li>
+          <li><span class="v">✅</span> אם משהו לא בסדר, השתמש בכפתור הדיווח</li>
+        </ul>
+        <label class="safety-check">
+          <input type="checkbox" id="rulesConfirm" />
+          <span>קראתי, הבנתי, ואני מסכים/ה לחוקי הקהילה</span>
+        </label>
+        <div class="safety-actions">
+          <button class="safety-back" data-go="1">← חזור</button>
+          <button class="safety-next" data-go="3" disabled>המשך →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Fan Test -->
+      <div class="safety-step" data-safety-step="3" hidden>
+        <div class="safety-emoji">⚽</div>
+        <h2>אתה אוהד אמיתי?</h2>
+        <p class="safety-lead">3 שאלות מהירות. צריך לענות נכון לפחות על 2. <strong>זה מסנן בוטים וטרולים.</strong></p>
+
+        <div id="fanTestArea">
+          <div class="fan-progress">
+            <span>שאלה <strong id="fanQNum">1</strong> מתוך 3</span>
+            <span class="fan-score">נכון: <strong id="fanScore">0</strong></span>
+          </div>
+          <div class="fan-question" id="fanQuestion">
+            <p class="q-text" id="fanQText">---</p>
+            <div class="q-options" id="fanQOptions"></div>
+          </div>
+        </div>
+
+        <div id="fanResult" hidden>
+          <div class="fan-result-icon" id="fanResultIcon">🎉</div>
+          <h3 id="fanResultTitle">כל הכבוד!</h3>
+          <p id="fanResultText">עברת את המבחן. אתה אוהד אמיתי.</p>
+          <div class="safety-actions">
+            <button class="safety-back" id="fanRetryBtn" hidden>נסה שוב</button>
+            <button class="safety-next" id="fanFinishBtn">יאללה לאפליקציה 🚀</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header class="landing-header">
+    <div class="logo">
+      <span class="logo-icon">⚽</span>
+      <span class="logo-text">FANCHAT</span>
+    </div>
+    <div class="online-indicator" id="onlineIndicator">
+      <span class="dot"></span>
+      <span id="onlineCount">--</span> אוהדים אונליין
+    </div>
+  </header>
+
+  <main class="landing-main">
+    <section class="hero">
+      <h1>תפגוש אוהדים כמוך<br/><span class="gradient">מכל העולם</span></h1>
+      <p class="subtitle">וידאו צ'אט אקראי עם אוהדים של אותה קבוצה. בלי שיחות מביכות, בלי שיחות חולין - רק כדורגל.</p>
+    </section>
+
+    <section class="form-section">
+      <div class="step" data-step="1">
+        <div class="step-header">
+          <span class="step-num">1</span>
+          <h2>בחר את הקבוצה שלך</h2>
+        </div>
+        <div class="team-tabs">
+          <button class="tab active" data-cat="clubs">⚽ מועדונים</button>
+          <button class="tab" data-cat="national">🏳️ נבחרות</button>
+          <button class="tab" data-cat="israeli">🇮🇱 ישראליות</button>
+        </div>
+        <div class="team-grid" id="teamGrid"></div>
+      </div>
+
+      <div class="step" data-step="2">
+        <div class="step-header">
+          <span class="step-num">2</span>
+          <h2>פילטרים</h2>
+        </div>
+        <div class="filters">
+          <div class="filter-group">
+            <label>גיל</label>
+            <div class="chip-row">
+              <button class="chip" data-field="age" data-value="18-25">18-25</button>
+              <button class="chip" data-field="age" data-value="25-35">25-35</button>
+              <button class="chip" data-field="age" data-value="35-50">35-50</button>
+              <button class="chip" data-field="age" data-value="50+">50+</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>מגדר</label>
+            <div class="chip-row">
+              <button class="chip" data-field="gender" data-value="male">גבר</button>
+              <button class="chip" data-field="gender" data-value="female">אישה</button>
+              <button class="chip" data-field="gender" data-value="other">אחר</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>שפה</label>
+            <div class="chip-row">
+              <button class="chip" data-field="language" data-value="he">עברית</button>
+              <button class="chip" data-field="language" data-value="en">English</button>
+              <button class="chip" data-field="language" data-value="es">Español</button>
+              <button class="chip" data-field="language" data-value="ar">العربية</button>
+              <button class="chip" data-field="language" data-value="pt">Português</button>
+              <button class="chip" data-field="language" data-value="any">לא משנה</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-wrap">
+        <button id="startBtn" class="cta-btn" disabled>
+          <span>בחר קבוצה כדי להתחיל</span>
+        </button>
+        <p class="hint">לחיצה על הכפתור תבקש גישה למצלמה ולמיקרופון</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="landing-footer">
+    <p>FANCHAT v0.2 · אבטיפוס · 18+ בלבד · <a href="#" id="resetOnboarding">אפס אונבורדינג</a></p>
+  </footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/teams.js"></script>
+  <script src="/js/landing.js"></script>
+</body>
+</html>
