@@ -27,20 +27,36 @@
     document.querySelectorAll('.safety-step [data-go]').forEach(btn => {
       if (btn._wired) return;
       btn._wired = true;
-      btn.addEventListener('click', () => goToStep(parseInt(btn.dataset.go, 10)));
+      btn.addEventListener('click', (e) => {
+        if (btn.disabled || btn.getAttribute('aria-disabled') === 'true') {
+          e.preventDefault();
+          return;
+        }
+        goToStep(parseInt(btn.dataset.go, 10));
+      });
     });
+
     const ageCheck = document.getElementById('ageConfirm');
     const ageNext = document.querySelector('[data-safety-step="1"] .safety-next');
+    function syncAge() { ageNext.disabled = !ageCheck.checked; }
     if (!ageCheck._wired) {
       ageCheck._wired = true;
-      ageCheck.addEventListener('change', () => { ageNext.disabled = !ageCheck.checked; });
+      ageCheck.addEventListener('change', syncAge);
+      ageCheck.addEventListener('input', syncAge);
+      ageCheck.addEventListener('click', () => setTimeout(syncAge, 0));
     }
+    syncAge();
+
     const rulesCheck = document.getElementById('rulesConfirm');
     const rulesNext = document.querySelector('[data-safety-step="2"] .safety-next');
+    function syncRules() { rulesNext.disabled = !rulesCheck.checked; }
     if (!rulesCheck._wired) {
       rulesCheck._wired = true;
-      rulesCheck.addEventListener('change', () => { rulesNext.disabled = !rulesCheck.checked; });
+      rulesCheck.addEventListener('change', syncRules);
+      rulesCheck.addEventListener('input', syncRules);
+      rulesCheck.addEventListener('click', () => setTimeout(syncRules, 0));
     }
+    syncRules();
   }
 
   /* ---------------- FAN TEST ---------------- */
