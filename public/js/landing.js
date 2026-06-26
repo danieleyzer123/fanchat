@@ -2,25 +2,11 @@
   const ONBOARDING_KEY = 'fanchat-onboarded-v2';
 
   /* ---------------- SAFETY ONBOARDING ---------------- */
-  let pollerRunning = false;
-  function startCheckboxPoller() {
-    if (pollerRunning) return;
-    pollerRunning = true;
-    function tick() {
-      const modal = document.getElementById('safetyModal');
-      if (!modal || modal.hidden || modal.style.display === 'none') {
-        pollerRunning = false;
-        return;
-      }
-      const ageCheck = document.getElementById('ageConfirm');
-      const ageNext = document.querySelector('[data-safety-step="1"] .safety-next');
-      if (ageCheck && ageNext) ageNext.disabled = !ageCheck.checked;
-      const rulesCheck = document.getElementById('rulesConfirm');
-      const rulesNext = document.querySelector('[data-safety-step="2"] .safety-next');
-      if (rulesCheck && rulesNext) rulesNext.disabled = !rulesCheck.checked;
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
+  function shake(el) {
+    if (!el) return;
+    el.classList.remove('shake-it');
+    void el.offsetWidth;
+    el.classList.add('shake-it');
   }
 
   function showSafety() {
@@ -31,7 +17,6 @@
     goToStep(1);
     initSafetyHandlers();
     initFanTest();
-    startCheckboxPoller();
   }
   function hideSafety() {
     const modal = document.getElementById('safetyModal');
@@ -52,22 +37,36 @@
   function initSafetyHandlers() {
     const ageCheck = document.getElementById('ageConfirm');
     const ageNext = document.querySelector('[data-safety-step="1"] .safety-next');
-    function syncAge() { ageNext.disabled = !ageCheck.checked; }
+    ageNext.removeAttribute('disabled');
+    function syncAge() {
+      ageNext.classList.toggle('looks-disabled', !ageCheck.checked);
+    }
     ageCheck.onchange = syncAge;
     ageCheck.oninput = syncAge;
+    ageCheck.onclick = function () { setTimeout(syncAge, 0); };
     ageNext.onclick = function () {
-      if (!ageCheck.checked) return;
+      if (!ageCheck.checked) {
+        shake(ageCheck.closest('label'));
+        return;
+      }
       goToStep(2);
     };
     syncAge();
 
     const rulesCheck = document.getElementById('rulesConfirm');
     const rulesNext = document.querySelector('[data-safety-step="2"] .safety-next');
-    function syncRules() { rulesNext.disabled = !rulesCheck.checked; }
+    rulesNext.removeAttribute('disabled');
+    function syncRules() {
+      rulesNext.classList.toggle('looks-disabled', !rulesCheck.checked);
+    }
     rulesCheck.onchange = syncRules;
     rulesCheck.oninput = syncRules;
+    rulesCheck.onclick = function () { setTimeout(syncRules, 0); };
     rulesNext.onclick = function () {
-      if (!rulesCheck.checked) return;
+      if (!rulesCheck.checked) {
+        shake(rulesCheck.closest('label'));
+        return;
+      }
       goToStep(3);
     };
     syncRules();
