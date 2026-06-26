@@ -1,5 +1,5 @@
 (function () {
-  const ONBOARDING_KEY = 'fanchat-onboarded-v1';
+  const ONBOARDING_KEY = 'fanchat-onboarded-v2';
   if (!localStorage.getItem(ONBOARDING_KEY)) {
     window.location.href = '/';
     return;

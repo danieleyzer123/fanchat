@@ -1,5 +1,5 @@
 (function () {
-  const ONBOARDING_KEY = 'fanchat-onboarded-v1';
+  const ONBOARDING_KEY = 'fanchat-onboarded-v2';
 
   /* ---------------- SAFETY ONBOARDING ---------------- */
   let pollerRunning = false;
@@ -82,7 +82,7 @@
   function pickFanQuestions() {
     const pool = [...window.FAN_QUESTIONS];
     const picked = [];
-    while (picked.length < 3 && pool.length > 0) {
+    while (picked.length < 1 && pool.length > 0) {
       const i = Math.floor(Math.random() * pool.length);
       picked.push(pool.splice(i, 1)[0]);
     }
@@ -133,15 +133,15 @@
     document.getElementById('fanTestArea').hidden = true;
     const result = document.getElementById('fanResult');
     result.hidden = false;
-    const passed = fanState.score >= 2;
+    const passed = fanState.score >= 1;
 
     document.getElementById('fanResultIcon').textContent = passed ? '🏆' : '😬';
     document.getElementById('fanResultTitle').textContent = passed
-      ? `מצוין! ${fanState.score}/3`
-      : `אופס... ${fanState.score}/3`;
+      ? 'מצוין!'
+      : 'אופס...';
     document.getElementById('fanResultText').textContent = passed
-      ? 'עברת את המבחן. אתה אוהד אמיתי. ברוך הבא ל-FANCHAT!'
-      : 'צריך לפחות 2 נכון כדי להיכנס. נסה שוב!';
+      ? 'אתה אוהד אמיתי. ברוך הבא ל-FANCHAT!'
+      : 'התשובה לא נכונה. נסה שוב!';
 
     const retryBtn = document.getElementById('fanRetryBtn');
     const finishBtn = document.getElementById('fanFinishBtn');

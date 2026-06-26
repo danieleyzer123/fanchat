@@ -35,17 +35,17 @@
         <span class="dot" data-dot="3"></span>
       </div>
 
-      <!-- Step 1: Age Gate -->
+      <!-- Step 1: Welcome + Stranger Safety -->
       <div class="safety-step" data-safety-step="1">
-        <div class="safety-emoji">🔞</div>
+        <div class="safety-emoji">👋</div>
         <h2>ברוכים הבאים ל-FANCHAT</h2>
-        <p class="safety-lead">לפני שאתה נכנס - 3 שלבי אימות מהירים. זה לוקח 30 שניות וזה מה שמגן על הקהילה.</p>
+        <p class="safety-lead">פלטפורמה לחיבור בין אוהדי כדורגל מכל העולם. 3 שלבי אישור מהירים לפני הכניסה.</p>
         <div class="safety-card">
-          <strong>אזהרה:</strong> השירות הזה הוא ל-18+ בלבד. שיחות וידאו חיות עם זרים. אסור כניסה לקטינים.
+          <strong>חשוב לדעת:</strong> אתה עומד לדבר עם <strong>זרים בוידאו חי</strong>. אל תחשוף שם מלא, כתובת, בית ספר, מספר טלפון, מספר אשראי או מיקום מדויק. אם משהו מרגיש לא בסדר - לחץ "דווח" ועבור הלאה.
         </div>
         <label class="safety-check">
           <input type="checkbox" id="ageConfirm" />
-          <span>אני מאשר/ת שאני בן/בת <strong>18 ומעלה</strong>, ושכל מי שיצולם במצלמה שלי הוא 18+</span>
+          <span>הבנתי שאני מדבר/ת עם <strong>זרים</strong>, ושאני אחראי/ת על המידע האישי שאני חושף/ת</span>
         </label>
         <div class="safety-actions">
           <button class="safety-next" data-go="2" disabled>המשך →</button>
@@ -75,15 +75,15 @@
         </div>
       </div>
 
-      <!-- Step 3: Fan Test -->
+      <!-- Step 3: Fan Test (single question) -->
       <div class="safety-step" data-safety-step="3" hidden>
         <div class="safety-emoji">⚽</div>
         <h2>אתה אוהד אמיתי?</h2>
-        <p class="safety-lead">3 שאלות מהירות. צריך לענות נכון לפחות על 2. <strong>זה מסנן בוטים וטרולים.</strong></p>
+        <p class="safety-lead">שאלה אחת מהירה כדי לוודא שאתה אדם אמיתי. <strong>זה מסנן בוטים.</strong></p>
 
         <div id="fanTestArea">
-          <div class="fan-progress">
-            <span>שאלה <strong id="fanQNum">1</strong> מתוך 3</span>
+          <div class="fan-progress" hidden>
+            <span>שאלה <strong id="fanQNum">1</strong></span>
             <span class="fan-score">נכון: <strong id="fanScore">0</strong></span>
           </div>
           <div class="fan-question" id="fanQuestion">
