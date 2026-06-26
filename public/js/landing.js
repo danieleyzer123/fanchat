@@ -2,13 +2,36 @@
   const ONBOARDING_KEY = 'fanchat-onboarded-v1';
 
   /* ---------------- SAFETY ONBOARDING ---------------- */
+  let pollerRunning = false;
+  function startCheckboxPoller() {
+    if (pollerRunning) return;
+    pollerRunning = true;
+    function tick() {
+      const modal = document.getElementById('safetyModal');
+      if (!modal || modal.hidden || modal.style.display === 'none') {
+        pollerRunning = false;
+        return;
+      }
+      const ageCheck = document.getElementById('ageConfirm');
+      const ageNext = document.querySelector('[data-safety-step="1"] .safety-next');
+      if (ageCheck && ageNext) ageNext.disabled = !ageCheck.checked;
+      const rulesCheck = document.getElementById('rulesConfirm');
+      const rulesNext = document.querySelector('[data-safety-step="2"] .safety-next');
+      if (rulesCheck && rulesNext) rulesNext.disabled = !rulesCheck.checked;
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
   function showSafety() {
     const modal = document.getElementById('safetyModal');
     modal.hidden = false;
+    modal.style.display = '';
     document.body.classList.add('modal-open');
     goToStep(1);
     initSafetyHandlers();
     initFanTest();
+    startCheckboxPoller();
   }
   function hideSafety() {
     const modal = document.getElementById('safetyModal');
