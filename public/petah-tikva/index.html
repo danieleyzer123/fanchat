@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>רחובות פתח תקווה</title>
+<meta name="theme-color" content="#111418">
+<style>
+  :root { --accent: #ffcc33; --bg: rgba(10, 12, 16, 0.72); --text: #f4f4f4; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #111418; color: var(--text); font-family: "Segoe UI", Arial, "Noto Sans Hebrew", sans-serif; user-select: none; -webkit-user-select: none; touch-action: none; }
+  canvas#game { display: block; width: 100vw; height: 100vh; }
+  .hud { position: fixed; pointer-events: none; text-shadow: 0 2px 4px rgba(0,0,0,.8); }
+  #topRight { top: 14px; right: 16px; text-align: right; }
+  #money { font-size: 30px; font-weight: 800; color: #7ee07e; letter-spacing: 1px; }
+  #stars { font-size: 26px; color: #444; letter-spacing: 2px; }
+  #stars .on { color: #fff; text-shadow: 0 0 8px #fff, 0 2px 4px #000; }
+  #health { width: 160px; height: 8px; background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.4); margin-top: 6px; margin-right: 0; margin-left: auto; }
+  #health div { height: 100%; width: 100%; background: linear-gradient(90deg, #e44, #4d4); }
+  #street { bottom: 22px; right: 50%; transform: translateX(50%); text-align: center; }
+  #streetName { font-size: 30px; font-weight: 800; color: #fff; }
+  #areaName { font-size: 14px; color: #ccc; }
+  #speedo { bottom: 18px; left: 22px; text-align: left; direction: ltr; }
+  #speed { font-size: 54px; font-weight: 900; font-style: italic; line-height: 1; }
+  #speedUnit { font-size: 15px; color: #ccc; }
+  #mission { top: 14px; left: 50%; transform: translateX(-50%); background: var(--bg); padding: 8px 16px; border-radius: 10px; font-size: 17px; text-align: center; max-width: 92vw; display: none; }
+  #mission b { color: var(--accent); }
+  #mission .timer { font-variant-numeric: tabular-nums; color: #fff; margin-right: 10px; }
+  #toast { top: 30%; left: 50%; transform: translate(-50%, -50%); font-size: 42px; font-weight: 900; color: var(--accent); opacity: 0; transition: opacity .3s; text-align: center; -webkit-text-stroke: 1px #000; }
+  #minimapWrap { position: fixed; bottom: 18px; right: 18px; width: 190px; height: 190px; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255,255,255,.85); box-shadow: 0 4px 18px rgba(0,0,0,.6); pointer-events: none; }
+  #minimap { width: 100%; height: 100%; }
+  #compass { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); font-weight: 800; font-size: 13px; }
+  #loading { bottom: 230px; right: 18px; font-size: 13px; background: var(--bg); padding: 4px 10px; border-radius: 6px; display: none; }
+  #help { top: 14px; left: 16px; font-size: 12px; color: #ddd; line-height: 1.6; background: var(--bg); padding: 8px 12px; border-radius: 8px; direction: rtl; }
+  #help kbd { background: #333; border: 1px solid #555; border-radius: 3px; padding: 0 5px; font-family: inherit; color: #fff; }
+  #overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: radial-gradient(ellipse at center, rgba(20,24,32,.88), rgba(0,0,0,.96)); z-index: 10; }
+  .panel { text-align: center; max-width: 560px; padding: 24px; }
+  .panel h1 { font-size: clamp(38px, 8vw, 64px); margin: 0; font-weight: 900; font-style: italic; color: var(--accent); -webkit-text-stroke: 2px #000; text-shadow: 4px 4px 0 #000; letter-spacing: 1px; }
+  .panel h2 { margin: 6px 0 18px; font-weight: 600; color: #ddd; font-size: 18px; }
+  .panel p { color: #bbb; line-height: 1.6; font-size: 15px; }
+  .btn { pointer-events: auto; background: var(--accent); color: #111; border: 0; border-radius: 10px; font-size: 22px; font-weight: 800; padding: 14px 40px; cursor: pointer; margin: 10px 6px; font-family: inherit; }
+  .btn.secondary { background: #2c313a; color: #eee; font-size: 16px; padding: 10px 18px; }
+  #status { margin-top: 12px; color: #9ad; min-height: 22px; font-size: 14px; }
+  #progress { height: 6px; background: #222; border-radius: 3px; overflow: hidden; margin: 10px auto; width: 260px; display: none; }
+  #progress div { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+  #menu { position: fixed; inset: 0; background: rgba(0,0,0,.75); display: none; align-items: center; justify-content: center; z-index: 9; }
+  #menu .panel { background: #181b21; border-radius: 14px; border: 1px solid #333; }
+  select { font-size: 16px; padding: 8px; border-radius: 8px; background: #222; color: #eee; border: 1px solid #444; width: 100%; font-family: inherit; }
+  #bigmap { position: fixed; inset: 4vh 4vw; z-index: 8; display: none; border-radius: 12px; border: 2px solid #fff; background: #1e2228; }
+  #bigmap canvas { width: 100%; height: 100%; display: block; border-radius: 12px; }
+  #bigmapHint { position: absolute; top: 8px; right: 12px; font-size: 13px; color: #ccc; }
+  #touch { position: fixed; inset: auto 0 0 0; height: 45vh; display: none; pointer-events: none; z-index: 5; }
+  .tbtn { position: absolute; pointer-events: auto; width: 74px; height: 74px; border-radius: 50%; background: rgba(255,255,255,.16); border: 2px solid rgba(255,255,255,.4); color: #fff; font-size: 28px; display: flex; align-items: center; justify-content: center; }
+  .tbtn.active { background: rgba(255,204,51,.45); }
+  #attribution { position: fixed; bottom: 2px; left: 50%; transform: translateX(-50%); font-size: 10px; color: rgba(255,255,255,.55); pointer-events: auto; }
+  #attribution a { color: inherit; }
+  #fallbackNote { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); background: #7a2b10; color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 13px; display: none; z-index: 4; text-align: center; max-width: 90vw; }
+  @media (max-width: 700px) {
+    #help { display: none; }
+    #minimapWrap { width: 120px; height: 120px; top: 90px; bottom: auto; }
+    #speedo { bottom: auto; top: 14px; left: 14px; }
+    #speed { font-size: 36px; }
+    #street { bottom: auto; top: 64px; }
+    #streetName { font-size: 20px; }
+    #mission { top: auto; bottom: 46vh; font-size: 14px; }
+    #loading { top: 220px; bottom: auto; }
+  }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="topRight" class="hud">
+  <div id="money">₪0</div>
+  <div id="stars"><span>★</span><span>★</span><span>★</span><span>★</span></div>
+  <div id="health"><div></div></div>
+</div>
+<div id="mission" class="hud"></div>
+<div id="toast" class="hud"></div>
+<div id="street" class="hud"><div id="streetName"></div><div id="areaName">פתח תקווה</div></div>
+<div id="speedo" class="hud"><span id="speed">0</span> <span id="speedUnit">קמ״ש</span></div>
+<div id="minimapWrap"><canvas id="minimap" width="380" height="380"></canvas><div id="compass">צ</div></div>
+<div id="loading" class="hud">טוען רחובות...</div>
+<div id="fallbackNote">אין חיבור לשרתי OpenStreetMap, אז מוצגת מפה סכמטית ולא הרחובות האמיתיים. נסו לרענן בעוד רגע.</div>
+<div id="help" class="hud">
+  <div><kbd>W</kbd>/<kbd>↑</kbd> גז &nbsp; <kbd>S</kbd>/<kbd>↓</kbd> בלם/רוורס</div>
+  <div><kbd>A</kbd><kbd>D</kbd>/<kbd>←</kbd><kbd>→</kbd> הגה &nbsp; <kbd>רווח</kbd> בלם יד (דריפט)</div>
+  <div><kbd>H</kbd> צופר &nbsp; <kbd>C</kbd> מצלמה &nbsp; <kbd>N</kbd> יום/לילה</div>
+  <div><kbd>M</kbd> מפה &nbsp; <kbd>R</kbd> חזרה לכביש &nbsp; <kbd>Esc</kbd> תפריט</div>
+</div>
+<div id="bigmap"><canvas id="bigmapCanvas"></canvas><div id="bigmapHint">לחצו על המפה כדי לקפוץ לשם · M לסגירה</div></div>
+
+<div id="touch">
+  <div class="tbtn" data-k="left" style="left:18px;bottom:30px">◀</div>
+  <div class="tbtn" data-k="right" style="left:106px;bottom:30px">▶</div>
+  <div class="tbtn" data-k="hand" style="left:62px;bottom:118px;font-size:16px">יד</div>
+  <div class="tbtn" data-k="brake" style="right:106px;bottom:30px">▼</div>
+  <div class="tbtn" data-k="gas" style="right:18px;bottom:30px">▲</div>
+  <div class="tbtn" data-k="menu" style="right:18px;bottom:118px;font-size:18px">☰</div>
+</div>
+
+<div id="menu">
+  <div class="panel">
+    <h1 style="font-size:40px">הפסקה</h1>
+    <p>קפיצה לרחוב:</p>
+    <select id="teleport"></select>
+    <div style="margin-top:14px">
+      <button class="btn secondary" id="btnNight">יום / לילה</button>
+      <button class="btn secondary" id="btnCam">מצלמה</button>
+      <button class="btn secondary" id="btnMute">השתק</button>
+      <button class="btn secondary" id="btnMap">מפה</button>
+    </div>
+    <button class="btn" id="btnResume">המשך לנהוג</button>
+  </div>
+</div>
+
+<div id="overlay">
+  <div class="panel">
+    <h1>רחובות פתח תקווה</h1>
+    <h2>נהיגה חופשית בעיר האמיתית</h2>
+    <p>הרחובות, הבניינים והפארקים נטענים ישירות מ־OpenStreetMap, לפי המיפוי האמיתי של פתח תקווה.
+       אספו נוסעים, הגיעו ליעד בזמן והיזהרו מהמשטרה.</p>
+    <button class="btn" id="btnStart">התחל לנהוג</button>
+    <div id="progress"><div></div></div>
+    <div id="status"></div>
+  </div>
+</div>
+
+<div id="attribution">נתוני מפה © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">תורמי OpenStreetMap</a></div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

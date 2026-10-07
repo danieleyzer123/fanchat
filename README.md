@@ -70,3 +70,16 @@ npm start
         ├── landing.js     # לוגיקת דף הנחיתה
         └── chat.js        # לוגיקת WebRTC
 ```
+
+## Petah Tikva Streets (driving game)
+
+A GTA-style free-roam driving game set on the real streets of Petah Tikva, at `/petah-tikva/`
+(e.g. `http://localhost:3000/petah-tikva/` after `npm start`).
+
+- Roads, buildings (with real heights where mapped), parks and trees are loaded live from
+  OpenStreetMap through the Overpass API, in ~1km tiles that stream in as you drive, and are
+  cached in IndexedDB.
+- Taxi missions, wanted level with police chases, AI traffic and buses, day/night, minimap and full map.
+- Controls: WASD / arrows, Space handbrake, H horn, C camera, N night, M map, R back to road, Esc menu.
+  Touch controls on phones.
+- If no Overpass server is reachable, a clearly-labelled schematic map is used instead.
